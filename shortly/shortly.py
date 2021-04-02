@@ -1,18 +1,13 @@
 """A simple URL shortener using Werkzeug and redis."""
 import os
-
 import redis
-from jinja2 import Environment
-from jinja2 import FileSystemLoader
-from werkzeug.exceptions import HTTPException
-from werkzeug.exceptions import NotFound
+from jinja2 import Environment, FileSystemLoader
+from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.middleware.shared_data import SharedDataMiddleware
-from werkzeug.routing import Map
-from werkzeug.routing import Rule
+from werkzeug.routing import Map, Rule
 from werkzeug.urls import url_parse
 from werkzeug.utils import redirect
-from werkzeug.wrappers import Request
-from werkzeug.wrappers import Response
+from werkzeug.wrappers import Request, Response
 
 
 def base36_encode(number):
@@ -125,7 +120,8 @@ def create_app(redis_host="localhost", redis_port=6379, with_static=True):
     app = Shortly({"redis_host": redis_host, "redis_port": redis_port})
     if with_static:
         app.wsgi_app = SharedDataMiddleware(
-            app.wsgi_app, {"/static": os.path.join(os.path.dirname(__file__), "static")}
+            app.wsgi_app, {"/static": os.path.join(os.path.dirname(__file__),
+                                                   "static")}
         )
     return app
 
